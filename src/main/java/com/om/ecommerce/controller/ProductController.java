@@ -15,7 +15,7 @@ public class ProductController {
     }
 
     //CREATE
-    @GetMapping
+    @PostMapping
     public Product addProduct(@RequestBody Product product) {
         return service.addProduct(product);
     }
