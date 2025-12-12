@@ -21,12 +21,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf -> csrf.disable())       // disable csrf
+        http.csrf(csrf -> csrf.disable())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()   // register + login allowed
-                        .requestMatchers("/products/**").authenticated()  // protect all product APIs
-                        .anyRequest().authenticated()
+                        .requestMatchers("/auth/**").permitAll()                         // Anyone can login/register
+
+                        .requestMatchers("GET", "/products/**").permitAll()              // Everyone can view products
+
+                        .requestMatchers("POST", "/products/**").hasRole("ADMIN")        // Only ADMIN can add
+                        .requestMatchers("PUT", "/products/**").hasRole("ADMIN")         // Only ADMIN can update
+                        .requestMatchers("DELETE", "/products/**").hasRole("ADMIN")      // Only ADMIN can delete
+
+                        .anyRequest().authenticated()                                    // Everything else requires login
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

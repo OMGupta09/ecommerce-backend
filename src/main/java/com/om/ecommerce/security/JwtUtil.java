@@ -31,7 +31,7 @@ public class JwtUtil {
 
     //ExtractRole
     public String extractRole(String token){
-        return (String)extractAllClaims(token).get("role");
+        return (String)extractAllClaims(token).get("role", String.class);
     }
 
     //Validate Token
@@ -44,13 +44,13 @@ public class JwtUtil {
     }
 
     //helper to parse claim itseems
-    private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
+        private Claims extractAllClaims(String token) {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        }
 
 
 }
